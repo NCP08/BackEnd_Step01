@@ -7,7 +7,7 @@ build/
 temp/
 Debug/
 Release/
-.classpath
+# .classpath
 *.class
 *.war
 *.log
