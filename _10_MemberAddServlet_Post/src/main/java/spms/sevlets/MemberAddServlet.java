@@ -35,6 +35,7 @@ public class MemberAddServlet extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
+		// 파라미터를 꺼내기 전에 해야 함
 		// 이 설정을 안해주면 한글이 깨져서 저장됨
 		// 이 설정을 추가해줄 것
 		req.setCharacterEncoding("UTF-8");
