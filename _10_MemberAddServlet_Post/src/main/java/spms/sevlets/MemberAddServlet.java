@@ -35,6 +35,8 @@ public class MemberAddServlet extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
+		// get 요청은 소스에 하지 않고, tomcat의 server.xml에 해야 함
+		
 		// 파라미터를 꺼내기 전에 해야 함
 		// 이 설정을 안해주면 한글이 깨져서 저장됨
 		// 이 설정을 추가해줄 것
