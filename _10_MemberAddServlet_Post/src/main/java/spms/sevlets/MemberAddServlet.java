@@ -40,7 +40,7 @@ public class MemberAddServlet extends HttpServlet{
 		try {
 			DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
 			conn = DriverManager.getConnection(
-					"jdbc:mysql:localhost:4306/studydb",
+					"jdbc:mysql://localhost:4306/studydb",
 					"study",
 					"study"
 					);
