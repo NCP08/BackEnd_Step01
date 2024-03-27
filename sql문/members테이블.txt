@@ -1,0 +1,38 @@
+CREATE TABLE members(
+	mno INTEGER NOT NULL COMMENT '회원일련번호',
+	email VARCHAR(40) NOT NULL COMMENT '이메일',
+	pwd VARCHAR(100) NOT NULL COMMENT '암호',
+	mname VARCHAR(50) NOT NULL COMMENT '이름',
+	cre_date DATETIME NOT NULL COMMENT '가입일',
+	mod_date DATETIME NOT NULL COMMENT '마지막 암호 변경일'
+)
+COMMENT '회원 기본 정보';
+
+-- mno를 members의 대표키(Primary Key)로 선정한다.
+ALTER TABLE members ADD CONSTRAINT pk_members_mno
+ PRIMARY KEY (mno);
+
+-- email은 중복되지 않는 규칙 설정
+CREATE UNIQUE INDEX email_members_uix ON members (email);
+
+-- 데이터가 추가될 때마다 mno를 자동증가 하도록 설정
+ALTER TABLE members MODIFY 
+ COLUMN mno INTEGER NOT NULL AUTO_INCREMENT
+ COMMENT '회원일련번호';
+
+INSERT INTO members(email,pwd,mname,cre_date,mod_date)
+ VALUES ('s1@test.com', '1111', '홍길동', NOW(), NOW());
+
+INSERT INTO members(email,pwd,mname,cre_date,mod_date)
+ VALUES ('s2@test.com', '2222', '임꺽정', NOW(), NOW());
+
+INSERT INTO members(email,pwd,mname,cre_date,mod_date)
+ VALUES ('s3@test.com', '3333', '장길산', NOW(), NOW());
+
+INSERT INTO members(email,pwd,mname,cre_date,mod_date)
+ VALUES ('s4@test.com', '4444', '일지매', NOW(), NOW());
+
+INSERT INTO members(email,pwd,mname,cre_date,mod_date)
+ VALUES ('s5@test.com', '5555', '차돌바위', NOW(), NOW());
+
+SELECT * FROM members;
