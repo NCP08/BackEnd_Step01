@@ -11,7 +11,7 @@
                         
         
         <property name="java-output-path" value="/_08_MemberListServlet/build/classes"/>
-        <property name="context-root" value="_10_MemberAddServlet_Post"/>
+        <property name="context-root" value="_09_MemberAddServlet"/>
                     
     
     </wb-module>
