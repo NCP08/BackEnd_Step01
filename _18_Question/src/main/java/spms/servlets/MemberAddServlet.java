@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -58,12 +59,18 @@ public class MemberAddServlet extends HttpServlet{
 		PreparedStatement stmt = null;
 		
 		try {
-			DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+			ServletContext sc = this.getServletContext();
+			Class.forName(sc.getInitParameter("driver"));
 			conn = DriverManager.getConnection(
-					"jdbc:mysql://localhost:4306/studydb",
-					"study",
-					"study"
-					);
+					sc.getInitParameter("url"),	// JDBC url
+					sc.getInitParameter("username"),								// id
+					sc.getInitParameter("password"));
+//			DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+//			conn = DriverManager.getConnection(
+//					"jdbc:mysql://localhost:4306/studydb",
+//					"study",
+//					"study"
+//					);
 			stmt = conn.prepareStatement(
 					"INSERT INTO members(email,pwd,mname,cre_date,mod_date)" + 
 					" VALUES(?,?,?,NOW(),NOW())"
