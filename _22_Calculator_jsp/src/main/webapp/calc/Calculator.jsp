@@ -12,7 +12,7 @@ if(request.getParameter("v1") != null){
 	v2 = request.getParameter("v2");
 	String op = request.getParameter("op");
 	
-	result = calculate(Integer.parseInt(v1), Integer.parseInt(v2), op);
+	result = calculate(Double.parseDouble(v1), Double.parseDouble(v2), op);
 	
 	if("+".equals(op))
 		selected[0] = "selected";
@@ -49,15 +49,15 @@ if(request.getParameter("v1") != null){
 </html>
 
 <%!
-private String calculate(int a, int b, String op){
-	int result = 0;
+private String calculate(double a, double b, String op){
+	double result = 0;
 	
 	if("+".equals(op)) result = a + b;
 	else if("-".equals(op)) result = a - b;
 	else if("*".equals(op)) result = a * b;
 	else if("/".equals(op)) result = a / b;
 	
-	return Integer.toString(result);	
+	return Double.toString(result);	
 }
 %>
 
