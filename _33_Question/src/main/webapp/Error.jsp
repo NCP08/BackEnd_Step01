@@ -22,7 +22,9 @@
 		// 대신 서블릿에 e.printStackTrace()를 호출하였음
 		int traceLen = 0;				
 	%>
+	
 	<p>Error: <%=err %></p>
+	
 	<%
 		for(int i=0;i<traceLen;i++){
 			String stack = trace[i].toString();
