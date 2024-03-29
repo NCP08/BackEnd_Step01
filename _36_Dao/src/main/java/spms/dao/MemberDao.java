@@ -133,12 +133,48 @@ public class MemberDao {
 	
 	// MemberUpdateServlet에서 post요청시 필요
 	public int update(Member member) throws Exception{
-		return 0;
+		PreparedStatement stmt = null;
+		
+		try {
+			stmt = connection.prepareStatement(strUpdate);
+			stmt.setString(1, member.getEmail());
+			stmt.setString(2, member.getName());
+			stmt.setInt(3, member.getNo());
+			
+			return stmt.executeUpdate();
+			
+		}catch(Exception e) {
+			throw e;
+		}finally {
+			try {if(stmt!=null) stmt.close();} catch(Exception e) {}
+		}
 	}
 	
 	// LogInServlet에서 필요
 	public Member exist(String email, String password) throws Exception{
-		return null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			stmt = connection.prepareStatement(strExist);
+			stmt.setString(1, email);
+			stmt.setString(2, password);
+			rs = stmt.executeQuery();
+			
+			if(rs.next()) {
+				return new Member()
+						.setName(rs.getString("mname"))
+						.setEmail(rs.getString("email"));
+			}else {
+				return null;
+			}
+			
+		}catch(Exception e) {
+			throw e;
+		}finally {
+			try {if(rs!=null) rs.close();} catch(Exception e) {}
+			try {if(stmt!=null) stmt.close();} catch(Exception e) {}
+		}
 	}
 }
 
