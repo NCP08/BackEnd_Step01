@@ -64,17 +64,71 @@ public class MemberDao {
 	
 	// MemberAddServlet에서 필요
 	public int insert(Member member) throws Exception{
-		return 0;
+		PreparedStatement stmt = null;
+		
+		try {
+			stmt = connection.prepareStatement(strInsert);
+			stmt.setString(1,  member.getEmail());
+			stmt.setString(2,  member.getPassword());
+			stmt.setString(3, member.getName());
+			
+			/*
+				DB에서 이 명령이 적용된 row의 개수를 반환한다.
+				1개 입력되면 1을 리턴한다.
+				1이면 입력 성공,
+				0이면 입력 안됨
+			*/
+			int count = stmt.executeUpdate();
+			return count;
+		}catch(Exception e) {
+			throw e;
+		}finally {
+			try {if(stmt!=null) stmt.close();} catch(Exception e) {}
+		}
 	}
 	
 	// MemberDeleteServlet에서 필요
 	public int delete(int no) throws Exception{
-		return 0;
+		PreparedStatement stmt = null;
+		
+		try {
+			stmt = connection.prepareStatement(strDelete);
+			stmt.setInt(1, no);
+			return stmt.executeUpdate();
+			
+		}catch(Exception e) {
+			throw e;
+		}finally {
+			try {if(stmt!=null) stmt.close();} catch(Exception e) {}
+		}
 	}
 	
 	// MemberUpdateServlet에서 get요청시 필요
 	public Member selectOne(int no) throws Exception{
-		return null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			stmt = connection.prepareStatement(strSelectOne);
+			stmt.setInt(1, no);
+			rs = stmt.executeQuery();
+			
+			if(rs.next()) {
+				return new Member()
+						.setNo(rs.getInt("mno"))
+						.setEmail(rs.getString("email"))
+						.setName(rs.getString("mname"))
+						.setCreatedDate(rs.getDate("cre_date"));
+			}else {
+				throw new Exception("해당 번호의 회원을 찾을 수 없습니다.");
+			}
+			
+		}catch(Exception e) {
+			throw e;
+		}finally {
+			try {if(rs!=null) rs.close();} catch(Exception e) {}
+			try {if(stmt!=null) stmt.close();} catch(Exception e) {}
+		}
 	}
 	
 	// MemberUpdateServlet에서 post요청시 필요
