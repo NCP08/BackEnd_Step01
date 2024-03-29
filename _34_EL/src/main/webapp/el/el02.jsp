@@ -39,6 +39,7 @@ pre {
 <p><a href="el01.jsp">[이전]</a><a href="el03.jsp">[다음]</a></p>
 <h2>EL - 값 꺼내기</h2>
 <%
+// pageContext는 현재 jsp 페이지 내에서 접근하는 공간
 // 데이터 준비
 pageContext.setAttribute("scores", new int[]{90,80,70,100});
 
