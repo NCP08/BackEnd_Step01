@@ -1,8 +1,9 @@
 package spms.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import spms.vo.Member;
@@ -33,19 +34,32 @@ public class MemberDao {
 
 	// MemberListServlet에서 필요
 	public List<Member> selectList() throws Exception{
-		Statement stmt = null;
+		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		
 		try {
-			stmt = connection.createStatement();
-			rs = stmt.executeQuery(strSelectList);
+			stmt = connection.prepareStatement(strSelectList);
+			rs = stmt.executeQuery();
+			
+			List<Member> members = new ArrayList<>();
+			
+			while(rs.next()) {
+				members.add(new Member()
+						.setNo(rs.getInt("mno"))
+						.setName(rs.getString("mname"))
+						.setEmail(rs.getString("email"))
+						.setCreatedDate(rs.getDate("cre_date"))
+						);
+			}
+			
+			return members;
+			
 		}catch(Exception e) {
-			
+			throw e;
 		}finally {
-			
+			try {if(rs!=null) rs.close();} catch(Exception e) {}
+			try {if(stmt!=null) stmt.close();} catch(Exception e) {}
 		}
-		
-		return null;
 	}
 	
 	// MemberAddServlet에서 필요
