@@ -10,7 +10,7 @@
 </head>
 <body>
 	<h1>회원 목록</h1>
-	<p><a href='add'>신규 회원</a>
+	<p><a href='add'>신규 회원</a></p>
 	<%
 		List<Member> members = (List<Member>)request.getAttribute("members");
 		for(Member member : members){
