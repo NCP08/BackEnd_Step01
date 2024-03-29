@@ -65,6 +65,24 @@ public class MemberListServlet extends HttpServlet{
 						"/member/MemberList.jsp");
 			
 			res.setContentType("text/html;charset=UTF-8");
+			/*
+			 * 서블릿이나 jsp에서 다른 서블릿/jsp로 이동하는 방법
+			 * 1) redirect : 브라우저한테 다른 주소로 새로 접속해
+			 *               request를 공유할 수 없다.
+			 *               (기존 request를 가지고 요청하는 것이 아닌, 새로운 요청이기 때문에)
+			 *               브라우저의 url창은 기존 주소로 접속했다가, 새로운 주소로 표시된다.
+			 *               
+			 * 2) 기존 request을 전달하는 요청
+			 *   : 기존 request가 아직 브라우저에 응답으로 가지않고,
+			 *     서버 내부에서 경로 이동만 하는 방식
+			 *     * 브라우저가 처음 접속한 주소가 브라우저에 그대로 표현된다.
+			 *       (다만 서버 내부에서는 경로를 이동)
+			 *     a)include : 일시 호출하고 다시 원래 호출한 곳으로 제어권이 넘어온다.
+			 *                 MemberListServlet -> MemberList.jsp -> MemberListServlet 응답 -> Browser
+			 *     b)foward  : 호출과 동시에 브라우저에 응답 제어권을 넘긴다.
+			 *     			   MemberListServlet -> MemberList.jsp 응답 ->  Browser
+			 * 
+			 * */
 			// include방식으로 전달한다.
 			rd.include(req, res);
 			
