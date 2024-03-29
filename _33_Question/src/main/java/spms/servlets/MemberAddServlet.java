@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,6 +22,11 @@ public class MemberAddServlet extends HttpServlet{
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		System.out.println("MemberAddServlet::doGet() 호출");
 		
+		RequestDispatcher rd = req.getRequestDispatcher(
+				"/member/MemberForm.jsp");
+		rd.forward(req, resp);
+		
+		/*
 		resp.setContentType("text/html;charset=UTF-8");
 		PrintWriter out = resp.getWriter();
 		out.println("<html><head><title>회원 등록</title></head>");
@@ -33,6 +39,7 @@ public class MemberAddServlet extends HttpServlet{
 		out.println("<input type='reset' value='취소'>");
 		out.println("</form>");
 		out.println("</body></html>");
+		*/
 	}
 	
 	@Override
@@ -79,6 +86,7 @@ public class MemberAddServlet extends HttpServlet{
 			stmt.setString(3,  req.getParameter("name"));
 			stmt.executeUpdate();
 			
+			/*
 			resp.setContentType("text/html;charset=UTF-8");
 			PrintWriter out = resp.getWriter();
 			out.println("<html><head><title>회원등록결과</title></head>");
@@ -87,6 +95,7 @@ public class MemberAddServlet extends HttpServlet{
 			out.println("<body>");
 			out.println("<p>등록 성공입니다</p>");
 			out.println("</body></html>");
+			*/
 			
 			// Refresh대신 Redirect를 처리한다.
 			// 시간을 지체 하지 않고, 바로 다시 상대경로 이동
@@ -98,7 +107,12 @@ public class MemberAddServlet extends HttpServlet{
 			// 위에 처럼 해도 된다.
 			//resp.addHeader("Refresh", "1;url=list");
 		}catch(Exception e) {
-			throw new ServletException(e);
+			//throw new ServletException(e);
+			e.printStackTrace();
+			req.setAttribute("error", e);
+			RequestDispatcher rd = req.getRequestDispatcher("/Error.jsp");
+			rd.forward(req, resp);
+			
 		}finally {
 			try {if(stmt!=null) stmt.close();} catch(Exception e) {}
 			try {if(conn!=null) conn.close();} catch(Exception e) {}

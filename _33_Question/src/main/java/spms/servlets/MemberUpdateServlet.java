@@ -1,19 +1,21 @@
 package spms.servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import spms.vo.Member;
 
 @WebServlet("/member/update")
 @SuppressWarnings("serial")
@@ -46,6 +48,23 @@ public class MemberUpdateServlet extends HttpServlet{
 			 그러므로 rs.next()를 해야 1번째 행을 가리키고 값을 꺼낼 수가 있다.
 			*/
 			
+			if (rs.next()) {
+				req.setAttribute("member", 
+					new Member()
+						.setNo(rs.getInt("MNO"))
+						.setEmail(rs.getString("EMAIL"))
+						.setName(rs.getString("MNAME"))
+						.setCreatedDate(rs.getDate("CRE_DATE")));
+				
+			} else {
+				throw new Exception("해당 번호의 회원을 찾을 수 없습니다.");
+			}
+			
+			RequestDispatcher rd = req.getRequestDispatcher(
+					"/member/MemberUpdateForm.jsp");
+			rd.forward(req, resp);			
+			
+			/*
 			rs.next();
 			
 			resp.setContentType("text/html;charset=UTF-8");
@@ -68,9 +87,13 @@ public class MemberUpdateServlet extends HttpServlet{
 				" onclick='location.href=\"list\"'>");
 			out.println("</form>");
 			out.println("</body></html>");
-			
+			*/
 		}catch(Exception e) {
-			throw new ServletException(e);
+			//throw new ServletException(e);
+			e.printStackTrace();
+			req.setAttribute("error", e);
+			RequestDispatcher rd = req.getRequestDispatcher("/Error.jsp");
+			rd.forward(req, resp);
 		}finally {
 			try {if(rs!=null) rs.close();} catch(Exception e) {}
 			try {if(stmt!=null) stmt.close();} catch(Exception e) {}
@@ -107,7 +130,11 @@ public class MemberUpdateServlet extends HttpServlet{
 			resp.sendRedirect("list");
 			
 		}catch(Exception e) {
-			throw new ServletException(e);
+			//throw new ServletException(e);
+			e.printStackTrace();
+			req.setAttribute("error", e);
+			RequestDispatcher rd = req.getRequestDispatcher("/Error.jsp");
+			rd.forward(req, resp);
 		}finally {
 			try {if(stmt!=null) stmt.close();} catch(Exception e) {}
 			try {if(conn!=null) conn.close();} catch(Exception e) {}
