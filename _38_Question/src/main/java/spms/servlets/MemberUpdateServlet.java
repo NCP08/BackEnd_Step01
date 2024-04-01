@@ -88,9 +88,6 @@ public class MemberUpdateServlet extends HttpServlet{
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		System.out.println("MemberUpdateServlet::doPost() 호출");
 		
-		// CharacterEncodingFilter로 전처리 했으므로 이제 안해도 됨
-		//req.setCharacterEncoding("UTF-8");
-		
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
@@ -101,9 +98,9 @@ public class MemberUpdateServlet extends HttpServlet{
 		      memberDao.setConnection(conn);
 		         
 		      memberDao.update(new Member()
-		      .setNo(Integer.parseInt(req.getParameter("no")))
-		      .setName(req.getParameter("name"))
-		      .setEmail(req.getParameter("email")));			
+				      .setNo(Integer.parseInt(req.getParameter("no")))
+				      .setName(req.getParameter("name"))
+				      .setEmail(req.getParameter("email")));			
 			
 			/*
 			ServletContext sc = this.getServletContext();
