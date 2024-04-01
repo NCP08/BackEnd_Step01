@@ -29,16 +29,20 @@ public class LogInServlet extends HttpServlet{
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
+//		Connection conn = null;
+//		PreparedStatement stmt = null;
+//		ResultSet rs = null;
 		
 		try {
+			ServletContext sc = this.getServletContext();
+			MemberDao memberDao = (MemberDao)sc.getAttribute("memberDao");
+			/*
 		      ServletContext sc = this.getServletContext();
 		      conn = (Connection) sc.getAttribute("conn"); 
 
 		      MemberDao memberDao = new MemberDao();
 		      memberDao.setConnection(conn);
+		      */
 		      
 		      Member member = memberDao.exist(
 		    		  req.getParameter("email"), 
@@ -54,38 +58,15 @@ public class LogInServlet extends HttpServlet{
 		        rd.forward(req, resp);
 		      }			
 			
-			/*
-			ServletContext sc = this.getServletContext();
-			conn = (Connection)sc.getAttribute("conn");
-			stmt = conn.prepareStatement(
-						"SELECT mname, email FROM members WHERE email=? AND pwd=?"
-					);
-			stmt.setString(1, req.getParameter("email"));
-			stmt.setString(2, req.getParameter("password"));
-			rs = stmt.executeQuery();
-			// 회원이 존재하면
-			if(rs.next()) {
-				Member member = new Member()
-									.setEmail(rs.getString("email"))
-									.setName(rs.getString("mname"));
-				
-				// 세션 영역에 로그인 정보 저장
-				HttpSession session = req.getSession();
-				session.setAttribute("member", member);
-				
-				resp.sendRedirect("../member/list");
-			}else {
-				RequestDispatcher rd = req.getRequestDispatcher("/auth/LogInFail.jsp");
-				rd.forward(req, resp);
-			}
-			*/
-			
 		}catch(Exception e) {
 			
-		}finally {
+		}
+		/*
+		finally {
 			try {if(rs!=null) rs.close();} catch(Exception e) {}
 			try {if(stmt!=null) stmt.close();} catch(Exception e) {}
 		}
+		*/
 	}
 }
 
