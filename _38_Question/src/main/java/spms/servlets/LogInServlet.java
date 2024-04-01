@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import spms.dao.MemberDao;
 import spms.vo.Member;
 
 @SuppressWarnings("serial")
@@ -33,6 +34,27 @@ public class LogInServlet extends HttpServlet{
 		ResultSet rs = null;
 		
 		try {
+		      ServletContext sc = this.getServletContext();
+		      conn = (Connection) sc.getAttribute("conn"); 
+
+		      MemberDao memberDao = new MemberDao();
+		      memberDao.setConnection(conn);
+		      
+		      Member member = memberDao.exist(
+		    		  req.getParameter("email"), 
+		    		  req.getParameter("password"));
+		      if (member != null) {
+		        HttpSession session = req.getSession();
+		        session.setAttribute("member", member);
+		        resp.sendRedirect("../member/list");
+
+		      } else {
+		        RequestDispatcher rd = req.getRequestDispatcher(
+		            "/auth/LogInFail.jsp");
+		        rd.forward(req, resp);
+		      }			
+			
+			/*
 			ServletContext sc = this.getServletContext();
 			conn = (Connection)sc.getAttribute("conn");
 			stmt = conn.prepareStatement(
@@ -56,6 +78,7 @@ public class LogInServlet extends HttpServlet{
 				RequestDispatcher rd = req.getRequestDispatcher("/auth/LogInFail.jsp");
 				rd.forward(req, resp);
 			}
+			*/
 			
 		}catch(Exception e) {
 			

@@ -26,7 +26,9 @@
 		${member.no}에서 no를 '프로퍼티'라고 부른다.
 		이것은 member.getNo() 함수를 호출하는데 get은 제거하고 N은 소문자로 바꾸는 규칙이다.
 		결국 ${member.no}는 member.getNo()와 같다.
-		
+	-->	
+	<%
+		/*
 		만약 request공간과 session공간에 동일한 nameList객체가 존재할 때
 		만약 session에 존재하는 nameList.getCount()를 꺼내고 싶을 때는?
 		${nameList.count}  => request에 있는 것을 꺼낸다.
@@ -40,8 +42,9 @@
 		* EL의 목적
 		 - html코드와의 위화감을 줄이기 위해서
 		 - Error를 줄이기 위해서(코딩 오타 방지)
-	
-	 -->
+		 */
+	%>
+	 
 	<h1>회원정보</h1>
 	<form action='update' method='post'>
 		번호: <input type='text' name='no' value='${member.no }' readonly><br>
