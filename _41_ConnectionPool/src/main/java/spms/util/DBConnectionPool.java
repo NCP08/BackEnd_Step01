@@ -2,9 +2,8 @@ package spms.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class DBConnectionPool {
 	
@@ -13,7 +12,10 @@ public class DBConnectionPool {
 	String url;
 	String username;
 	String password;
-	List<Connection> connList = new ArrayList<Connection>();
+	
+	// ArrayList대신 Vector를 변경하다.
+	// ArrayList와 Vector는 동일한 구조이지만, Vector 멀티스레드 동기화 처리가 되어 있다.
+	List<Connection> connList = new Vector<Connection>();
 	
 	public DBConnectionPool(String driver, String url,
 			String username, String password) throws Exception{
