@@ -161,7 +161,7 @@
              Note: The pattern used is equivalent to using pattern="common" -->
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs" pattern="%h %l %u %t &quot;%r&quot; %s %b" prefix="localhost_access_log" suffix=".txt"/>
 
-      <Context docBase="_38_Question" path="/_38_Question" reloadable="true" source="org.eclipse.jst.jee.server:_38_Question"/><Context docBase="_40_Question" path="/_40_Question" reloadable="true" source="org.eclipse.jst.jee.server:_40_Question"/><Context docBase="_41_ConnectionPool" path="/_41_ConnectionPool" reloadable="true" source="org.eclipse.jst.jee.server:_41_ConnectionPool"/><Context docBase="_42_DataSource" path="/_42_DataSource" reloadable="true" source="org.eclipse.jst.jee.server:_42_DataSource"/></Host>
+      <Context docBase="_38_Question" path="/_38_Question" reloadable="true" source="org.eclipse.jst.jee.server:_38_Question"/><Context docBase="_40_Question" path="/_40_Question" reloadable="true" source="org.eclipse.jst.jee.server:_40_Question"/><Context docBase="_41_ConnectionPool" path="/_41_ConnectionPool" reloadable="true" source="org.eclipse.jst.jee.server:_41_ConnectionPool"/><Context docBase="_42_DataSource" path="/_42_DataSource" reloadable="true" source="org.eclipse.jst.jee.server:_42_DataSource"/><Context docBase="_43_Tomcat_DataSource" path="/_43_Tomcat_DataSource" reloadable="true" source="org.eclipse.jst.jee.server:_43_Tomcat_DataSource"/></Host>
     </Engine>
   </Service>
 </Server>

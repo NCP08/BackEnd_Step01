@@ -29,7 +29,7 @@
     
     <!-- Tomcat이 제공하는 DataSource 사용 등록 -->
     <!-- 
-    	name : JNDI 이름, Context의 loopup()를 사용해서 자원을 찾을 때 사용. java:comp/env 디렉토리에서 찾음
+    	name : JNDI 이름, Context의 loopup()를 사용해서 자원을 찾을 때 사용. java:comp/env디렉토리에서 찾음
     	auth : DataSource를 관리하는 주체
     	       Application은 어플리케이션
     	       Container는 서블릿 컨테이너
