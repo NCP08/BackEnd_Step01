@@ -44,6 +44,7 @@ public class DispatchServlet extends HttpServlet{
 		model.put("memberDao", this.getServletContext().getAttribute("memberDao"));
 		model.put("session", req.getSession());
 		
+		// pageController 객체를 담을 수 있는 부모 변수
 		Controller pageController = null;
 		
 		try {
@@ -77,15 +78,20 @@ public class DispatchServlet extends HttpServlet{
 				pageControllerPath = "/auth/logout";
 			}
 			
-			String viewUrl = "";
+			String viewUrl = "";		// 다음에 이동할 jsp나 redirect경로
+			
+			// pageController 객체가 존재한다면
 			if(pageController != null) {
-				System.out.println("DispatchServlet::service() - pageController=" + pageController.getClass().getName());
+				System.out.println("DispatchServlet::service() - pageController=" 
+													+ pageController.getClass().getName());
 				viewUrl = pageController.execute(model);
 				
 				for(String key : model.keySet()) {
 					req.setAttribute(key, model.get(key));
 				}
-			}else {
+			}
+			// 아직 pageController가 존재하지 않고, Servlet으로 되어 있을 때
+			else {
 				System.out.println("DispatchServlet::service() - pageController=" + pageControllerPath);
 				RequestDispatcher rd = req.getRequestDispatcher(pageControllerPath);
 				rd.include(req, resp);	
