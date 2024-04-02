@@ -59,15 +59,19 @@ public class MemberUpdateServlet extends HttpServlet {
 			ServletContext sc = this.getServletContext();
 			MemberDao memberDao = (MemberDao) sc.getAttribute("memberDao");
 
+			Member member = (Member)req.getAttribute("member");
+			memberDao.update(member);
+			
+			req.setAttribute("viewUrl",  "redirect:list.do");
+			
+			/*
 			memberDao.update(new Member()
 					.setNo(Integer.parseInt(req.getParameter("no")))
 					.setName(req.getParameter("name"))
 					.setEmail(req.getParameter("email")));
-			
-			req.setAttribute("viewUrl",  "redirect:list.do");
 
-			//resp.sendRedirect("list");
-
+			resp.sendRedirect("list");
+			*/
 		} catch (Exception e) {
 			throw new ServletException(e);
 			/*
