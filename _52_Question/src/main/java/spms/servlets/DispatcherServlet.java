@@ -16,14 +16,14 @@ import spms.controls.MemberAddController;
 import spms.controls.MemberListController;
 import spms.vo.Member;
 
-/* DispatchServlet은 Spring에서 사용하는 DesignPattern을 사용한 클래스 명칭이다.
+/* DispatcherServlet은 Spring에서 사용하는 DesignPattern을 사용한 클래스 명칭이다.
  * 이 역할은 *.do로 들어오는 모든 주소를 일단 받아서 분기시켜주는 역할이다.
  * 이 서블릿을 설계상에서 FrontController라고 부른다.
  * */
 
 @SuppressWarnings("serial")
 @WebServlet("*.do")
-public class DispatchServlet extends HttpServlet{
+public class DispatcherServlet extends HttpServlet{
 
 	// get요청/post요청을 모두 받기 위해 구현하는 메서드
 	@Override

@@ -7,4 +7,4 @@
 
 4. LogOutController 작성하세요
 
-5. DispatchServlet을 알맞게 변경하세요
+5. DispatcherServlet을 알맞게 변경하세요
