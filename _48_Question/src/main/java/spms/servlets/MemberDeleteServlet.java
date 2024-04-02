@@ -19,25 +19,27 @@ import spms.dao.MemberDao;
 public class MemberDeleteServlet extends HttpServlet {
 
 	@Override
-	public void doGet(
-			HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("MemberDeleteServlet::doGet() 호출");
 
 		try {
 			ServletContext sc = this.getServletContext();
-			MemberDao memberDao = (MemberDao)sc.getAttribute("memberDao");
+			MemberDao memberDao = (MemberDao) sc.getAttribute("memberDao");
+
+			memberDao.delete(Integer.parseInt(request.getParameter("no")));
 			
-		      memberDao.delete(Integer.parseInt(request.getParameter("no")));			
-			
-			response.sendRedirect("list");
-			
+			request.setAttribute("viewUrl", "redirect:list.do");
+
+			//response.sendRedirect("list");
+
 		} catch (Exception e) {
+			throw new ServletException(e);
+			/*
 			e.printStackTrace();
 			request.setAttribute("error", e);
 			RequestDispatcher rd = request.getRequestDispatcher("/Error.jsp");
 			rd.forward(request, response);
-			
-		} 
+			*/
+		}
 	}
 }
