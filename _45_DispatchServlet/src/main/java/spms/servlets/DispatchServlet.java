@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import spms.vo.Member;
+
 /* DispatchServlet은 Spring에서 사용하는 DesignPattern을 사용한 클래스 명칭이다.
  * 이 역할은 *.do로 들어오는 모든 주소를 일단 받아서 분기시켜주는 역할이다.
  * 이 서블릿을 설계상에서 FrontController라고 부른다.
@@ -32,13 +34,35 @@ public class DispatchServlet extends HttpServlet{
 			String pageControllerPath = null;
 			
 			/* 1. 주소에 따라 처리할 pagetControllerPath를 지정한다.
-			 * 2. 주소에 따라 약속된 Parameter를 꺼내서 request공유공간에 저장한다.*/
+			 * 2. 주소에 따라 약속된 Parameter를 꺼내서 request 공유공간에 저장한다.*/
+			
+			/* 현재 각 pageController에 해당하는 Servlet클래스들은
+			 * request공간에서 Parameter를 꺼내도록 구현되어 있다.
+			 * 하지만 Servlet의 종속성을 약화하고 보다 독립성을 강화하기 위해
+			 * DispatchServlet을 제외한 나머지 Servlet클래스들은
+			 * HttpServlet을 상속받지 않은 Pojo방식의 java클래스로 변경할 예정이다.
+			 * 그렇게 되면, request공유 공간을 사용할 수 없으므로
+			 * 이곳에서는 DispatchServlet에서는 먼저 Parameter를 꺼내서 처리하도록하고
+			 * 나중에는 다른 방식으로 각 pageController에 전달할 예정이다.
+			 * */
 			if("/member/list.do".equals(servletPath)) {
 				pageControllerPath = "/member/list";
 			}else if("/member/add.do".equals(servletPath)) {
 				pageControllerPath = "/member/add";
+				if(req.getParameter("email") != null) {
+					req.setAttribute("member",  new Member()
+								.setEmail(req.getParameter("email"))
+								.setPassword(req.getParameter("password"))
+								.setName(req.getParameter("name")));
+				}
 			}else if("/member/update.do".equals(servletPath)) {
 				pageControllerPath = "/member/update";
+				if(req.getParameter("email") != null) {
+					req.setAttribute("member",  new Member()
+								.setNo(Integer.parseInt(req.getParameter("no")))
+								.setEmail(req.getParameter("email"))
+								.setName(req.getParameter("name")));
+				}
 			}else if("/member/delete.do".equals(servletPath)) {
 				pageControllerPath = "/member/delete";
 			}else if("/auth/login.do".equals(servletPath)) {
