@@ -8,6 +8,7 @@ public class LogOutController implements Controller {
   @Override
   public String execute(Map<String, Object> model) throws Exception {
     HttpSession session = (HttpSession)model.get("session");
+    session.removeAttribute("member");
     session.invalidate();
     
     return "redirect:login.do";
