@@ -12,8 +12,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import spms.controls.Controller;
+import spms.controls.LogInController;
+import spms.controls.LogOutController;
 import spms.controls.MemberAddController;
+import spms.controls.MemberDeleteController;
 import spms.controls.MemberListController;
+import spms.controls.MemberUpdateController;
 import spms.vo.Member;
 
 /* DispatcherServlet은 Spring에서 사용하는 DesignPattern을 사용한 클래스 명칭이다.
@@ -73,6 +77,16 @@ public class DispatcherServlet extends HttpServlet{
 				}
 				*/
 			}else if("/member/update.do".equals(servletPath)) {
+				pageController = new MemberUpdateController();
+				if(req.getParameter("email") != null) {
+					model.put("member",  new Member()
+								.setNo(Integer.parseInt(req.getParameter("no")))
+								.setEmail(req.getParameter("email"))
+								.setName(req.getParameter("name")));
+				}else {
+			          model.put("no", Integer.parseInt(req.getParameter("no")));
+		        }
+				/*
 				pageControllerPath = "/member/update";
 				if(req.getParameter("email") != null) {
 					req.setAttribute("member",  new Member()
@@ -80,12 +94,22 @@ public class DispatcherServlet extends HttpServlet{
 								.setEmail(req.getParameter("email"))
 								.setName(req.getParameter("name")));
 				}
+				*/
 			}else if("/member/delete.do".equals(servletPath)) {
-				pageControllerPath = "/member/delete";
+				pageController = new MemberDeleteController();
+				model.put("no", Integer.parseInt(req.getParameter("no")));
+				//pageControllerPath = "/member/delete";
 			}else if("/auth/login.do".equals(servletPath)) {
-				pageControllerPath = "/auth/login";
+				pageController = new LogInController();
+		        if (req.getParameter("email") != null) {
+		            model.put("loginInfo", new Member()
+		              .setEmail(req.getParameter("email"))
+		              .setPassword(req.getParameter("password")));
+		        }
+				//pageControllerPath = "/auth/login";
 			}else if("/auth/logout.do".equals(servletPath)) {
-				pageControllerPath = "/auth/logout";
+				pageController = new LogOutController();
+				//pageControllerPath = "/auth/logout";
 			}
 			
 			String viewUrl = "";		// 다음에 이동할 jsp나 redirect경로
