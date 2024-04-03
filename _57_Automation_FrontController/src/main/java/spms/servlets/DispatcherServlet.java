@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import spms.bind.DataBinding;
+import spms.bind.ServletRequestDataBinder;
 import spms.controls.Controller;
 
 @SuppressWarnings("serial")
