@@ -38,6 +38,8 @@ public class ServletRequestDataBinder {
 			if(m != null) {
 				// 메서드 정보를 가지고 메서드를 호출
 				// dataObject로부터 m에 저장된 setter메서드를 호출해서 값을 저장한다.
+				//m.getParameterTypes()[0] - setter메서드의 매개변수 타입
+				//request.getParameter(paramName) - 브라우저가 보내온 매개변수 값
 				m.invoke(dataObject,  createValueObject(m.getParameterTypes()[0],
 													request.getParameter(paramName)));
 			}

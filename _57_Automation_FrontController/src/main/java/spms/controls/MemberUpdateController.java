@@ -25,18 +25,21 @@ public class MemberUpdateController implements Controller, DataBinding {
 	
 	@Override
 	public String execute(Map<String, Object> model) throws Exception {
-		//MemberDao memberDao = (MemberDao) model.get("memberDao");
 
-		if (model.get("member") == null) { // get 요청
+		//if (model.get("member") == null) { // get 요청
+		
+		Member member = (Member)model.get("member");
+		
+		if(member.getEmail() == null) {
 			System.out.println("MemberUpdateController::execute() - get 요청");
 			Integer no = (Integer) model.get("no");
-			Member member = memberDao.selectOne(no);
-			model.put("member", member);
+			Member deatailInfo = memberDao.selectOne(no);
+			model.put("member", deatailInfo);
 			return "/member/MemberUpdateForm.jsp";
 
 		} else { // post 요청
 			System.out.println("MemberUpdateController::execute() - post 요청");
-			Member member = (Member) model.get("member");
+			//Member member = (Member) model.get("member");
 			memberDao.update(member);
 			return "redirect:list.do";
 		}

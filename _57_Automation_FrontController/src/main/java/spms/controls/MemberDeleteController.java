@@ -24,8 +24,6 @@ public class MemberDeleteController implements Controller, DataBinding {
 	@Override
 	public String execute(Map<String, Object> model) throws Exception {
 		System.out.println("MemberDeleteController::execute() - get 요청");
-		
-		//MemberDao memberDao = (MemberDao) model.get("memberDao");
 
 		Integer no = (Integer) model.get("no");
 		memberDao.delete(no);

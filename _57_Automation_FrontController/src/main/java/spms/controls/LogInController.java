@@ -30,16 +30,23 @@ public class LogInController implements Controller, DataBinding {
 	
 	@Override
 	public String execute(Map<String, Object> model) throws Exception {
-		if (model.get("loginInfo") == null) { // 입력폼을 요청할 때
+		//if (model.get("loginInfo") == null) { // 입력폼을 요청할 때
+		
+		// 현재 execute에서 사용하는 객체를 자동생성하는 방식이
+		// get/post 가리지 않고 무조건 객체를 생성하는 방식이라
+		// 기존의 loginInfo가 존재하는지로 판단할 수 없어서
+		// lofinInfo에 email 정보가 존재하는 지로 조건을 변경한다.
+		Member loginInfo = (Member)model.get("loginInfo");
+		
+		if(loginInfo.getEmail() == null) {
 			System.out.println("LogInController::execute() - get 요청");
 			
 			return "/auth/LogInForm.jsp";
 
 		} else { // 회원 등록을 요청할 때
 			System.out.println("LogInController::execute() - post 요청");
-			
-			//MemberDao memberDao = (MemberDao) model.get("memberDao");
-			Member loginInfo = (Member) model.get("loginInfo");
+
+			//Member loginInfo = (Member) model.get("loginInfo");
 
 			Member member = memberDao.exist(loginInfo.getEmail(), loginInfo.getPassword());
 

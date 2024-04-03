@@ -18,8 +18,6 @@ public class MemberListController implements Controller{
 	public String execute(Map<String, Object> model) throws Exception {
 		System.out.println("MemberListController::execute() 호출");
 		
-		//MemberDao memberDao = (MemberDao)model.get("memberDao");
-		
 		model.put("members", memberDao.selectList());
 		return "/member/MemberList.jsp";
 	}	
