@@ -4,7 +4,7 @@ SELECT *
 FROM emp;
 
 --테이블 구조 확인
---DESC emp;
+DESC emp;
 
 --현재 스키마(현재 계정)에 포함된 모든 테이블 검색
 SELECT * FROM tab;
