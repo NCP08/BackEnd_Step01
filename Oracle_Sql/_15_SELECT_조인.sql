@@ -64,12 +64,38 @@ SELECT loc, dept.dno, dname, eno, ename
 -- 다른 테이블에서 범위 결과를 추출할 때
 --3) 각 직원의 급여를 10%인상한 경우 급여 등급을 검색한다
 
+-- 10% 인상 급여 계산
+SELECT sal "기존 급여", sal*1.1 "10% 인상 급여", eno, ename
+ FROM emp;
+
+-- 현재 급여 등급 계산
+SELECT grade, sal, eno, ename
+ FROM emp, salgrade
+ WHERE sal BETWEEN losal AND hisal;
+
+SELECT grade, sal, eno, ename
+ FROM emp, salgrade
+ WHERE sal BETWEEN losal AND hisal
+ ORDER BY grade, sal DESC;
+
+
+SELECT grade, sal*1.1 "10% 인상 급여", eno, ename
+ FROM emp, salgrade
+ WHERE sal*1.1 BETWEEN losal AND hisal
+ ORDER BY 1, 2 DESC;
+
+
 
 
 --4) 잘못된 조인 (Cross Join)
 --; 조인 조건이 없으면 Cross Join 이라고 하며
 -- 테이블들의 모든 행이 1:1 교차하게 된다.
 -- 결과에 의미가 없다
+
+--모든 사원이 모든 부서에 매칭되는 결과를 보고 싶을 때
+-- 그 외는 의미 없다.
+SELECT *
+ FROM emp, dept;
 
   
   
