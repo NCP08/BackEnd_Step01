@@ -1,0 +1,14 @@
+
+ 
+CREATE TABLE prj_membs(
+	pno INTEGER NOT NULL COMMENT '프로젝트 일련번호',
+	mno INTEGER NOT NULL COMMENT '회원 일련번호',
+	level INTEGER NOT NULL COMMENT '등급',
+	state INTEGER NOT NULL COMMENT '상태',
+	mod_date DATETIME NOT NULL COMMENT '상태 변경일'
+)
+COMMENT '프로젝트 멤버';
+
+ALTER TABLE prj_membs ADD CONSTRAINT pk_pno_mno_prj_membs
+ PRIMARY KEY (pno, mno);
+ 

@@ -1,0 +1,16 @@
+CREATE table projects(
+	pno INTEGER NOT NULL COMMENT '프로젝트 일련번호',
+	pname VARCHAR(255) NOT NULL COMMENT '프로젝트명',
+	content TEXT NOT NULL COMMENT '설명',
+	sta_date DATETIME NOT NULL COMMENT '시작일',
+	end_date DATETIME NOT NULL COMMENT '종료일',
+	state INTEGER NOT NULL COMMENT '상태',
+	cre_date DATETIME NOT NULL COMMENT '생성일',
+	tags VARCHAR(255) NULL COMMENT '태그'
+)
+COMMENT '프로젝트';
+
+ALTER TABLE projects ADD CONSTRAINT pk_pno_projects
+ PRIMARY KEY (pno);
+
+ 
