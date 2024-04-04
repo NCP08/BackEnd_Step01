@@ -1,10 +1,45 @@
 [관계 연산자 : AND, OR]
 
 --1) 20번 부서원 중에 급여가 2000이상인 사원을 검색하세요
+SELECT *
+ FROM emp;
 
+SELECT *
+ FROM emp
+ WHERE dno='20';
+
+SELECT *
+ FROM emp
+ WHERE sal >= 2000;
+
+SELECT *
+ FROM emp
+ WHERE dno='20' AND sal >= 2000;
+
+
+SELECT dno, sal, eno, ename
+ FROM emp
+ WHERE dno='20' AND sal >= 2000;
 
 --2) 30번 부서원 중에 급여가 2000이상이고 개발 업무를 담당하는
 --  사원을 검색하세요
+SELECT dno, eno, ename 
+ FROM emp
+ WHERE dno='30';
+
+SELECT sal, eno, ename 
+ FROM emp
+ WHERE sal >= 2000
+ ORDER BY sal DESC;
+
+SELECT job, eno, ename
+ FROM emp
+ WHERE job='개발';
+
+SELECT dno, sal, job, eno, ename 
+ FROM emp
+ WHERE dno='30' AND sal >= 2000 AND job='개발'
+ ORDER BY sal DESC;
 
 
 
@@ -13,8 +48,28 @@ NOT > AND > OR
 
 --10번 부서이거나 월급이 1600초과하는 사원중에
 --보너스가 600을 초과하는 사원
---=> 실제로는
---10번 부서이거나 또는 월급이 1600초과하면서 보너스가 600초과하는 사원
+--=> 문맥의 구분을 정확히 하지 않으면 잘 못된 결과를 만들기가 쉽다.
+
+--10번 부서이거나, 월급이 1600초과하는 사원중에 보너스가 600을 초과하는 사원
+--10번 부서이거나 월급이 1600초과하는 사원중에, 보너스가 600을 초과하는 사원
+
+SELECT *
+ FROM emp
+ WHERE dno='10'
+  OR sal > 1600
+  AND comm > 600;
+
+SELECT *
+ FROM emp
+ WHERE dno='10'
+  OR (sal > 1600
+  AND comm > 600);
+
+SELECT *
+ FROM emp
+ WHERE (dno='10'
+  OR sal > 1600)
+  AND comm > 600;
 
 
 
@@ -40,15 +95,40 @@ NOT > AND > OR
                 원동기, 전동차
 
 --4) 김씨 성을 가진 사원을 검색하세요
-
+SELECT *
+ FROM emp
+ WHERE ename LIKE '김%';
 
 --아래는 김퍼센트를 찾으므로 잘못되었다.
+SELECT *
+ FROM emp
+ WHERE ename='김%';
 
+5) 이름이 '하늘'인 사원
+SELECT *
+ FROM emp
+ WHERE ename LIKE '%하늘';
 
 
 6) 성과 이름이 각각 한 글자인 사원을 검색하세요
+SELECT *
+ FROM emp
+ WHERE ename LIKE '__';
 
+7) 성과 이름이 각각 한 글자인 학생을 검색하세요
+SELECT *
+ FROM student
+ WHERE sname LIKE '__';
 
+8) 성과 이름이 합쳐서 세 글자인 학생을 검색하세요
+SELECT *
+ FROM student
+ WHERE sname LIKE '___';
+
+9) 성이 '사마'씨로 시작되는 학생을 검색하세요
+SELECT *
+ FROM student
+ WHERE sname LIKE '사마%';
   
   
   
