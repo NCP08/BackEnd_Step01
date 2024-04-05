@@ -19,6 +19,27 @@ INITCAP 첫문자만 대문자로 나머지는 소문자로
 --
 --1)ERP 부서가 있는 지역을 검색한다
 
+SELECT loc, dno, dname
+ FROM dept
+ WHERE dname='ERP';
+
+
+SELECT loc, dno, dname
+ FROM dept
+ WHERE dname='erp';
+
+SELECT loc, dno, dname
+ FROM dept
+ WHERE UPPER(dname)='ERP';
+
+SELECT loc, dno, dname
+ FROM dept
+ WHERE LOWER(dname)='erp';
+
+SELECT loc, dno, dname
+ FROM dept
+ WHERE INITCAP(dname)='Erp';
+
 
 문자연산함수
 SUBSTR 문자열내에 지정된 위치의 문자열을 반환(문자열, 위치, 개수)
@@ -40,21 +61,47 @@ CONCAT('김', '연아') => 김연아
 --잘 사용하지 않는다
 --왜냐하면 || 을 더 많이 사용한다
 
+SELECT CONCAT(dname, ' '||loc)
+ FROM dept;
+
+SELECT dname||' '||loc "부서 지역"
+ FROM dept;
+
 
 3) 부서명과 길이를 출력하라
+SELECT dno, dname, LENGTH(dname) "이름 길이"
+ FROM dept;
 
 
 4) SUBSTR함수를 이용해서 컬럼에 일부 내용만을 검색한다
+SELECT ename,   SUBSTR(ename, 2),  -- 2번째 글자부터
+                SUBSTR(ename, -2),  -- 뒤에서 2번째 글자부터
+                SUBSTR(ename, 1, 2), -- 1번째 글자부터 2글자
+                SUBSTR(ename, -2, 2) -- 뒤에서 2번째 글자부터 2글자
+ FROM emp;
 
 
 5) 사원 이름에 'a'가 나타나는 위치를 출력한다
 
-
-
-
-
+SELECT INSTR('database', 'a'),          -- 처음부터
+        INSTR('database', 'a', 3),      -- 3이후
+        INSTR('database', 'a', 1, 3)    -- 1이후 a가 3번째 보이는 위치
+FROM dual;
 
 6) TRIM 함수를 이용 다양한 방법으로 문자열을 검색한다
+
+SELECT TRIM(' 남기남 ')
+ FROM dual;
+
+SELECT LENGTH(' 남기남 '), LENGTH(TRIM(' 남기남 '))
+ FROM dual;
+
+SELECT TRIM('남' from '남기남'),
+        TRIM(leading '남' from '남기남'),
+        TRIM(trailing '남' from '남기남'),
+        TRIM('남' from '남남남기남남남')
+ FROM dual;
+
 
 
 TRIM은 주로 공백 문자를 제거하는데 거의 사용된다
@@ -64,10 +111,14 @@ TRIM은 주로 공백 문자를 제거하는데 거의 사용된다
 TRIM(ename)='홍길동' 을 하면 앞뒤의 공백문자를 제거해준다
 
 7) 이름과 급여를 각각 10컬럼으로 검색한다
+SELECT RPAD(ename, 10, '*'), LPAD(sal, 10, '*')
+ FROM emp;
 
 
 8) 부서명의 마지막 글자를 제외하고 검색한다
 
+SELECT dname, SUBSTR(dname, 1, LENGTH(dname)-1) dname
+ FROM dept;
 
 
 --문자치환함수
@@ -80,7 +131,9 @@ TRIM(ename)='홍길동' 을 하면 앞뒤의 공백문자를 제거해준다
 
 -- REPLACE를 더 많이 쓴다
 
-
+SELECT TRANSLATE('World of Warcraft', 'Wo', '-*') Translate,    -- W는 -로, o는 *로 1글자씩 대응된다.
+        REPLACE('World of Warcraft', 'Wo', '--') Replace        -- Wo라는 단어를 통째로 -- 로 바꾼다.
+ FROM dual;
 
 
 
