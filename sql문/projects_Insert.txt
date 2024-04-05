@@ -1,0 +1,18 @@
+
+ALTER TABLE projects MODIFY COLUMN 
+ pno INTEGER NOT NULL AUTO_INCREMENT COMMENT '프로젝트 일련번호';
+
+INSERT INTO projects (pname,content,sta_date,end_date,state,cre_date,tags)
+ VALUES ('프로젝트1', '내용...', '2024-04-01','2024-07-30',0,NOW(),'web');
+ 
+INSERT INTO projects (pname,content,sta_date,end_date,state,cre_date,tags)
+ VALUES ('프로젝트2', '내용...', '2024-05-01','2024-07-30',0,NOW(),'servlet/jsp');
+ 
+INSERT INTO projects (pname,content,sta_date,end_date,state,cre_date,tags)
+ VALUES ('프로젝트3', '내용...', '2024-06-01','2024-07-30',0,NOW(),'spring');
+ 
+INSERT INTO projects (pname,content,sta_date,end_date,state,cre_date,tags)
+ VALUES ('프로젝트4', '내용...', '2024-07-01','2024-07-30',0,NOW(),'spring boot');
+ 
+INSERT INTO projects (pname,content,sta_date,end_date,state,cre_date,tags)
+ VALUES ('프로젝트5', '내용...', '2024-07-01','2024-07-30',0,NOW(),'react');
