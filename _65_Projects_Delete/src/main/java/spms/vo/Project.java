@@ -1,6 +1,8 @@
 package spms.vo;
 
-import java.util.Date;
+import java.sql.Date;
+
+//import java.util.Date;
 
 /* 1번째 작업
  * 
