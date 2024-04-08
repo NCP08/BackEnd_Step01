@@ -11,7 +11,7 @@ WHERE NOT major='화학' AND syear=1;
 --3) 물리학과 3학년 학생을 검색하라
 SELECT *
 FROM student
-WHERE major='물리 ANS syear=3;
+WHERE major='물리' AND syear=3;
 
 --4) 평점이 2.0에서 3.0사이인 학생을 검색하라
 SELECT *
@@ -36,7 +36,7 @@ WHERE section='화학' AND orders='정교수';
 --8) 물리학과 학생중에 성이 사마씨인 학생을 검색하라
 SELECT *
 FROM student
-WHERE major='화학' AND sname LIKE '곽%';
+WHERE major='물리' AND sname LIKE '사마%';
 
 --9) 부임일이 1995년 이전인 정교수를 검색하라
 SELECT * 
