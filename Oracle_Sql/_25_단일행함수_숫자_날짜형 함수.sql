@@ -30,21 +30,37 @@ SIGN : SIGN(m)
         SIGN(-3) => -1
         
 1)다양한 숫자 함수를 이용한 결과를 확인한다
+SELECT ROUND(98.765), TRUNC(98.765),
+       ROUND(98.765, 2), TRUNC(98.765, 2)
+ FROM dual;
 
 
 2)부서의 연봉을 계산한다. 단 100단위 미만은 절삭한다
+SELECT eno, ename, TRUNC(sal*12+NVL(comm,0), -2) 연봉
+ FROM emp;
 
         
 --날짜 함수
 
-3)현재 시간을 검색하자
+ALTER SESSION SET nls_date_format='YYYY/MM/DD/HH24:MI:SS';
+ 
+ALTER SESSION SET nls_date_format='YYYY/MM/DD';
+  
+ALTER SESSION SET nls_date_format='YY/MM/DD';
 
+3)현재 시간을 검색하자
+SELECT sysdate
+ FROM dual;
 
 4)김연아의 
 오늘 날짜, 입사 일자, 입사일로부터 오늘까지 기간,
 입사일 이후 100일이 지난날 등을 검색하고
 날짜 연산의 결과를 보자
 
+SELECT sysdate 오늘, hdate 입사일,
+        TRUNC(sysdate-hdate) "입사일로부터 기간",
+        hdate+100 "100일 지난 날"
+ FROM emp;
 
 
 
@@ -89,34 +105,81 @@ LAST_DAY : LAST_DAY(날짜)
         
 
 5) 숫자와 날짜를 반올림하여 출력한다
+  해당 단위를 기준으로 하위를 반올림
+  Docker에 설치한 Oracle Server가 표준시라서
+  Asia/Seoul보다 9시간 느리다.
+
+SELECT sysdate,
+        ROUND(sysdate, 'YY') 년,
+        ROUND(sysdate, 'MM') 월,
+        ROUND(sysdate, 'DD') 일
+ FROM dual;
+ 
+SELECT sessiontimezone, 
+        dbtimezone, 
+        systimestamp, 
+        sysdate 
+FROM dual;
+
+SELECT sysdate,
+        ROUND(sysdate, 'YY') 년,
+        ROUND(sysdate, 'MM') 월,
+        ROUND(sysdate, 'DD') 일
+ FROM dual;
 
 
 6) 숫자와 날짜를 절삭하여 출력한다
 
+SELECT sysdate,
+        TRUNC(sysdate, 'YY') 년,
+        TRUNC(sysdate, 'MM') 월,
+        TRUNC(sysdate, 'DD') 일
+ FROM dual;
 
 
 7) 김연아가 오늘까지 일한 일수를 검색한다
 입사일을 포함하기 위해 +1을 해줬다
+
+예)
 1일 입사
 10일 퇴사
-10일
+일할 일수 = 10일
 10-1 = 9 + 1
+
+SELECT TRUNC(sysdate, 'DD') - TRUNC(hdate, 'DD')+1 "일한 일수"
+ FROM emp
+ WHERE ename='김연아';
 
 
 
 8) 20번 부서 직원들이 현재까지 근무한 개월 수를 검색한다
+SELECT eno, ename,
+        TRUNC(MONTHS_BETWEEN(sysdate, hdate)) "근무 개월"
+ FROM emp
+ WHERE dno='20';
 
 
 9) 20번 부서원들이 입사 100일째 되는 날과 10년째 되는 날을 검색한다
+SELECT eno, ename, hdate 입사일,
+        hdate+99 "100일",
+        ADD_MONTHS(hdate, 120) "10년 되는 날"
+ FROM emp
+ WHERE dno='20';
 
 
 10) 20번 부서원들이 입사한 이후 첫 번째 일요일을 검색한다
+SELECT eno, ename, hdate, NEXT_DAY(hdate, 'Sunday') Sunday
+ FROM emp
+ WHERE dno='20';
 
 
 11) 20번 부서원들의 입사한 달의 마지막 날짜와
 입사한 달에 근무 일수를 검색한다
 --(단 입사일은 근무일에서 제외한다)
-
+SELECT eno, ename, hdate, LAST_DAY(hdate) 마지막날,
+        LAST_DAY(TRUNC(hdate)) - TRUNC(hdate) "마지막달 근무일수"
+ FROM emp
+ WHERE dno='20';
 
 
 
