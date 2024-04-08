@@ -11,7 +11,7 @@ WHERE hiredate BETWEEN '1994/01/01' AND '1995/12/31';
 3) 화학과와 물리학과, 생물학과 학생을 검색하라
 SELECT *
 FROM student
-WHERE major IN ('물리, '화학', '생물');
+WHERE major IN ('물리', '화학', '생물');
 
 4) 정교수와 조교수를 검색하라
 SELECT *
