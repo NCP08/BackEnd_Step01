@@ -30,15 +30,47 @@ WHERE 컬럼 <단일 행 연산자> (SELECT 문: Sub Query);
 --1) 김연아의 급여를 검색한다
 --2) 김연아의 급여와 비교하여 더 많이 받는 사원을 검색한다
 
+SELECT sal
+ FROM emp
+ WHERE ename='김연아';
+
+SELECT sal, eno, ename
+ FROM emp
+ WHERE sal > 3300
+ ORDER BY sal DESC;
+
+SELECT sal, eno, ename
+ FROM emp
+ WHERE sal > (SELECT sal
+                FROM emp
+                WHERE ename='김연아')
+ ORDER BY sal DESC;
 
              
 2)노육과 평점이 동일한 학생의 정보를 검색하라
 --노육이 3명이라서 단일 행 연산자를 사용할 수가 없다
 --그래서 Error 가 발생했다
+SELECT sno, sname, avr
+ FROM student
+ WHERE sname='노육';
+
+SELECT avr
+ FROM student
+ WHERE sname='노육';
+
+SELECT sno, sname, avr
+ FROM student
+ WHERE avr = (SELECT avr
+              FROM student
+              WHERE sname='노육');
 
 
 --다중 행 서브 쿼리 (결과값이 여러 개의 행이다)
-
+SELECT sno, sname, avr
+ FROM student
+ WHERE avr IN (SELECT avr
+              FROM student
+              WHERE sname='노육');
              
 예측하기 힘든 단일 행 서브쿼리를 수정하는 방법
 1) '=' 연산자는 'IN'연산자로 바꾼다 - 다중행 서브쿼리로 전환
@@ -52,6 +84,27 @@ WHERE 컬럼 <단일 행 연산자> (SELECT 문: Sub Query);
  a) 김연아의 부서를 검색한다 - Sub Query
  b) 김연아의 업무를 검색한다 - Sub Query
  c) 위 조건의 사원의 정보를 검색한다 - Main Query
+
+SELECT dno
+ FROM emp
+ WHERE ename='김연아';
+
+SELECT job
+ FROM emp
+ WHERE ename='김연아';
+
+SELECT *
+ FROM emp
+ WHERE dno!='02' AND job='회계';
+
+SELECT *
+ FROM emp
+ WHERE dno!=(SELECT dno
+              FROM emp
+              WHERE ename='김연아') 
+  AND job=(SELECT job
+            FROM emp
+            WHERE ename='김연아');
  
 
 
@@ -63,17 +116,55 @@ WHERE 컬럼 <단일 행 연산자> (SELECT 문: Sub Query);
 --2) 일치하는 부서를 출력
 
 --부서별 평균급여
+SELECT dno, AVG(sal)
+ FROM emp
+ GROUP BY dno;
 
+SELECT dno, AVG(sal)
+ FROM emp
+ GROUP BY dno;
+
+-- 부서별 평균을 구하고 가장 큰 값을 구한다.
+SELECT MAX(AVG(sal))
+ FROM emp
+ GROUP BY dno;
 
 --부서의 평균급여중 최대값 
+SELECT dno, AVG(sal)
+ FROM emp
+ GROUP BY dno
+ HAVING AVG(sal)=99999;
 
-
+SELECT dno, AVG(sal)
+ FROM emp
+ GROUP BY dno
+ HAVING AVG(sal)=(SELECT MAX(AVG(sal))
+                  FROM emp
+                  GROUP BY dno);
 
 
 
 5) 부산에서 근무하는 사원의 정보를 검색한다
   a) 부산에 근무하는 부서번호
   b) 해당 부서번호와 일치하는 사원의 정보 검색
+
+SELECT dno, dname
+ FROM dept
+ WHERE loc='부산';
+
+SELECT dno
+ FROM dept
+ WHERE loc='부산';
+
+SELECT *
+ FROM emp
+ WHERE dno='20';
+
+SELECT *
+ FROM emp
+ WHERE dno=(SELECT dno
+            FROM dept
+            WHERE loc='부산');
   
 
   
