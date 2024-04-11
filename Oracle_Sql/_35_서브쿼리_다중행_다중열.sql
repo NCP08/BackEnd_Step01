@@ -16,7 +16,35 @@ WHERE 컬럼 <다중 행 연산자> (SELECT문 : Sub Query문);
  a) 20번 부서원들의 관리자가 여러 명일 수 있다
  b) 서브쿼리의 결과가 몇 개일지 예측할 수 없는 경우
     다중 행 연산자를 이용하여 다중 행 서브쿼리를 작성한다
+
+SELECT mgr
+ FROM emp
+ WHERE dno='20';   -- 0201, 0202, 1002
+
+SELECT mgr, dno, eno, ename
+ FROM emp
+ WHERE (mgr='0201' OR mgr='0202' OR mgr='1002')
+ AND dno!='20';
+
+SELECT mgr, dno, eno, ename
+ FROM emp
+ WHERE mgr IN ('0201', '0202', '1002')
+ AND dno!='20';
     
+SELECT mgr, dno, eno, ename
+ FROM emp
+ WHERE mgr IN (SELECT mgr
+               FROM emp
+               WHERE dno='20')
+ AND dno!='20';
+
+    
+SELECT mgr, dno, eno, ename
+ FROM emp
+ WHERE mgr IN (SELECT DISTINCT mgr
+               FROM emp
+               WHERE dno='20')
+ AND dno!='20';
 
 
 2) 10번 부서원들보다 급여가 낮은 사원을 검색한다
@@ -24,7 +52,37 @@ WHERE 컬럼 <다중 행 연산자> (SELECT문 : Sub Query문);
  2-2) 검색된 급여들로 낮은 지 비교한다
       ALL
       MIN
+
+SELECT sal
+ FROM emp
+ WHERE dno='10';   -- 4500, 3950, 3200
+
+SELECT sal, dno, eno, ename
+ FROM emp
+ WHERE sal < ALL(4500, 3950, 3200);
       
+SELECT sal, dno, eno, ename
+ FROM emp
+ WHERE sal < ALL(4500, 3950, 3200)
+ AND dno!='10';
+
+SELECT sal, dno, eno, ename
+ FROM emp
+ WHERE sal < ALL(SELECT sal
+                  FROM emp
+                  WHERE dno='10')
+ AND dno!='10';
+
+SELECT MIN(sal)
+ FROM emp
+ WHERE dno='10';
+
+SELECT sal, dno, eno, ename
+ FROM emp
+ WHERE sal < (SELECT MIN(sal)
+               FROM emp
+               WHERE dno='10')
+ AND dno!='10';
 
 
 
@@ -42,8 +100,30 @@ ANY : 모두 중에 하나라도
 
 3) 20번 부서원들과 보너스가 같은 사원을 검색한다
 
+SELECT comm
+ FROM emp
+ WHERE dno='20'; 
+ 
+ -- 330, 2000, null
+
+SELECT NVL(comm, 0)
+ FROM emp
+ WHERE dno='20';  
+-- 330, 2000, null
+
+-- null은 비교대상이 되지 않는다.
+SELECT *
+ FROM emp
+ WHERE comm IN (330, 2000, null)
+ AND dno!='20';
 
 --null 을 0으로 치환해서 검색할지는 판단을 내려야 한다
+SELECT *
+ FROM emp
+ WHERE NVL(comm, 0) IN (SELECT NVL(comm, 0)
+                        FROM emp
+                        WHERE dno='20')
+ AND dno!='20';
 
 
 
@@ -62,10 +142,39 @@ WHERE (컬럼1, 컬럼2, ...) IN (SELECT 문 : Sub Query 문);
 4) 손하늘과 동일한 관리자의 관리를 받으면서 업무도 같은 사원을
 검색한다.
 
+SELECT mgr
+ FROM emp
+ WHERE ename='손하늘';
+
+SELECT job
+ FROM emp
+ WHERE ename='손하늘';
+
+SELECT *
+ FROM emp
+ WHERE mgr='0001' AND job='지원'
+ AND ename!='손하늘';
+
+SELECT *
+ FROM emp
+ WHERE mgr=(SELECT mgr
+            FROM emp
+            WHERE ename='손하늘') 
+ AND job=(SELECT job
+            FROM emp
+            WHERE ename='손하늘')
+ AND ename!='손하늘';
 
 손하늘 사원이 1명만 존재한다면 단일 행 서브쿼리로 변경할
 수도 있다. 손하늘 사원이 여러 명이면 다중 열 서브쿼리로만
 가능하다.
+
+SELECT *
+ FROM emp
+ WHERE (mgr, job) IN (SELECT mgr, job
+                       FROM emp
+                       WHERE ename='손하늘')
+ AND ename!='손하늘';
 
 
 
@@ -74,6 +183,18 @@ WHERE (컬럼1, 컬럼2, ...) IN (SELECT 문 : Sub Query 문);
 (이름, 급여)
  5-1) 부서별 최소 급여
  5-2) 해당 급여에 해당하는 사원
+
+SELECT dno, MIN(sal)
+ FROM emp
+ GROUP BY dno;
+
+SELECT *
+ FROM emp
+ WHERE sal IN (SELECT MIN(sal)
+                FROM emp
+                GROUP BY dno)
+ ORDER BY dno;
+ 
 
 
 
