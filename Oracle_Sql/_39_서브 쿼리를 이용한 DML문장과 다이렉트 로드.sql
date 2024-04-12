@@ -221,25 +221,105 @@ SELECT sal, comm
 7) 제갈민과 동일한 부서의 사원들의 급여를
 제갈민의 급여와 동일하게 수정한다
 
+-- 20
+SELECT dno
+ FROM emp
+ WHERE ename='제갈민';
+
+-- 1520
+SELECT sal
+ FROM emp
+ WHERE ename='제갈민';
+
+SELECT dno, sal, eno, ename
+ FROM emp
+ WHERE dno='20' AND ename!='제갈민';
+
+UPDATE emp SET
+ sal = 1520
+ WHERE dno='20' AND ename!='제갈민';
 
 
+UPDATE emp SET
+ sal = (SELECT sal
+        FROM emp
+        WHERE ename='제갈민')
+ WHERE dno=(SELECT dno
+            FROM emp
+            WHERE ename='제갈민') 
+  AND ename!='제갈민';
+
+COMMIT;
+
+
+SELECT dno, sal, eno, ename
+ FROM emp
+ WHERE dno=(SELECT dno
+            FROM emp
+            WHERE ename='제갈민');
 
 
 8) 이초록의 급여, 보너스를 김연아와 동일하게 수정한다
 
+--이초록 : 1989, 2300
+--김연아 : 3300, 0
+SELECT sal, comm, eno, ename
+ FROM emp
+ WHERE ename IN ('이초록', '김연아');
+
+ROLLBACK;
+
+UPDATE emp SET
+ (sal, comm) = (SELECT sal, comm
+                FROM emp
+                WHERE ename='김연아')
+  WHERE ename='이초록';
 
 
+SELECT sal, comm, eno, ename
+ FROM emp
+ WHERE ename IN ('이초록', '김연아');
 
+COMMIT;
 
  
 9)위의 Query 보다 아래 Query 가 성능이 낮다
 
+UPDATE emp SET
+ sal = (SELECT sal
+        FROM emp
+        WHERE ename='김연아'),
+ comm = (SELECT comm
+        FROM emp
+        WHERE ename='김연아')
+ WHERE ename='이초록';
  
  
 --10) 제갈민을 제외한 같은 부서원을 삭제하세요
 
+-- 20
+SELECT dno
+ FROM emp
+ WHERE ename='제갈민';
+
+DELETE 
+ FROM emp
+ WHERE dno='20'
+  AND ename!='제갈민';
+
+SELECT dno, eno, ename
+ FROM emp
+ WHERE dno = (SELECT dno
+              FROM emp
+              WHERE ename='제갈민');
  
  
+DELETE 
+ FROM emp
+ WHERE dno=(SELECT dno
+            FROM emp
+            WHERE ename='제갈민')
+  AND ename!='제갈민';
  
  
  
