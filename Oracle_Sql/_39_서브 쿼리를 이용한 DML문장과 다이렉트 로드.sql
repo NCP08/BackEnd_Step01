@@ -14,6 +14,7 @@ SELECT 작업이나 DML 작업은 모두 메모리에서 이루어진다
 이들의 작업 공간으로 이용한다.
 이를 통해 작업을 모았다가 한번에 처리함으로써
 디스크 접근 회수와 양을 줄여 성능을 향상시킨다.
+(택배 물류 시스템)
 
 그러나 일괄적인 대량의 DML 작업이 메모리에서 일어나면 
 이를 디스크에 반영하고 다시 메모리를 정리하는 등의 
@@ -59,6 +60,17 @@ SET (컬럼, 컬럼, ...) = (SELECT 문장)
   
 1) emp2 테이블에 사번과 연봉을 입력한다
 
+SELECT * FROM emp2;
+
+DESC emp2;
+
+INSERT INTO emp2(eno, asal)
+ SELECT eno, sal*12+NVL(comm,0)
+  FROM emp;
+
+COMMIT;
+
+SELECT * FROM emp2;
 
 2) 데이터 타입이 일치하지 않으면 에러 발생
 데이터 입력이 가능한 경우
@@ -69,22 +81,39 @@ SET (컬럼, 컬럼, ...) = (SELECT 문장)
    '10' => 10
    숫자형 => 문자형 컬럼
    
+INSERT INTO emp2(eno, asal)
+ SELECT eno, hdate
+  FROM emp;
 
+INSERT INTO emp2(eno, asal)
+ SELECT eno, ename
+  FROM emp;
 
 
 3) 아래 경우는 자동형변환 되어 들어간다
 '30' -> 30 으로 형변환이 이루어진다
 
+INSERT INTO emp2(eno, asal)
+ SELECT eno, dno
+  FROM emp;
 
+COMMIT;
 
-
+SELECT *
+ FROM emp2;
 
 
 
 4) 각 사원의 정보와 근무지를 emp3 테이블에 저장하라
 
+DESC emp3;
+
 
 --INSERT 문내에 /**/를 넣어주면 주석이 아니라 힌트로 해석한다
+INSERT /*+ APPEND*/ INTO emp3 NOLOGGING(eno, ename, dno, dname)
+ SELECT eno, ename, dno, dname
+  FROM emp
+  JOIN dept USING(dno);
 
   
 --ORA-12838: cannot read/modify an object after modifying it in parallel
@@ -92,7 +121,11 @@ SET (컬럼, 컬럼, ...) = (SELECT 문장)
 --조회할 수 있다.
 --데이터의 안전성 보장을 위해서
 
+SELECT * FROM emp3;
 
+COMMIT;
+
+SELECT * FROM emp3;
 
 SELECT 작업이나 DML 작업은 모두 메모리에서 이루어진다.
 오라클은 SGA라는 메모리 영역 내에 데이터베이스 버퍼 캐시
@@ -135,10 +168,58 @@ SELECT 작업이나 DML 작업은 모두 메모리에서 이루어진다.
 각각 김연아의 급여와
 손하늘의 보너스와 동일하게 수정한다
 
+SELECT sal, comm, eno, ename
+ FROM emp
+ WHERE ename IN ('윤고은', '김연아', '손하늘');
+
+-- 2100, null
+SELECT sal, comm
+ FROM emp
+ WHERE ename='윤고은';
+
+-- 3300
+SELECT sal
+ FROM emp
+ WHERE ename='김연아';
+
+-- 980
+SELECT comm
+ FROM emp
+ WHERE ename='손하늘';
+
+UPDATE emp SET
+ sal = 3300,
+ comm = 980
+ WHERE ename='윤고은';
+
+SELECT sal, comm
+ FROM emp
+ WHERE ename='윤고은';
+
+ROLLBACK;
+
+SELECT sal, comm
+ FROM emp
+ WHERE ename='윤고은';
+
+
+UPDATE emp SET
+ sal = (SELECT sal
+        FROM emp
+        WHERE ename='김연아'),
+ comm = (SELECT comm
+        FROM emp
+        WHERE ename='손하늘')
+ WHERE ename='윤고은';
+
+COMMIT;
+
+SELECT sal, comm
+ FROM emp
+ WHERE ename='윤고은';
  
 7) 제갈민과 동일한 부서의 사원들의 급여를
 제갈민의 급여와 동일하게 수정한다
-
 
 
 
