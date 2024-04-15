@@ -131,9 +131,37 @@
 
 
 --테이블을 생성하고 데이터를 입력 확인한다
+
+CREATE TABLE board(
+  no NUMBER,
+  name VARCHAR2(50),
+  sub VARCHAR2(100),
+  content VARCHAR2(4000),
+  hdate DATE DEFAULT sysdate
+);
+
+DESC board;
+
+SELECT * FROM board;
+
+SELECT table_name, column_name, 
+data_type, data_length
+FROM user_tab_columns 
+WHERE table_name = 'BOARD';
+
   -- sys 계정의 소유 테이블
 
+INSERT INTO board(no, hdate)
+ VALUES(1, TO_DATE('2024/04/05', 'YYYY/MM/DD'));
 
+
+INSERT INTO board(no)
+ VALUES(2);
+
+SELECT * FROM board;
+
+SELECT no, TO_CHAR(hdate, 'YYYY-MM-DD:HH24:MI:SS')
+ FROM board;
 
 
 --utf-8에서는 한글은 3byte이다
