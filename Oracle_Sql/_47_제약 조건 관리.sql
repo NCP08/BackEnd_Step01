@@ -40,21 +40,55 @@
   1) 제약 조건을 삭제한다
   2) CASCADE : PK나 UK가 삭제될 경우 이를 참조하는 FK도 삭제된다.
 
+CREATE TABLE class(
+  cno VARCHAR2(2),
+  cname VARCHAR2(50)
+);
+
+CREATE TABLE st(
+  sno VARCHAR2(2),
+  sname VARCHAR2(50),
+  cno VARCHAR2(2)
+);
+
+INSERT INTO class VALUES('01', '노랑새싹반');
+INSERT INTO class VALUES('02', '연두잎새반');
+
+INSERT INTO st VALUES('11', '김연아', '01');
+INSERT INTO st VALUES('12', '홍길동', '02');
+INSERT INTO st VALUES('13', '임꺽정', '03');
 
 
 --제약 조건 추가
+ALTER TABLE class
+ ADD CONSTRAINT class_cno_pk PRIMARY KEY(cno);
+ALTER TABLE class
+ ADD CONSTRAINT class_cname_uk UNIQUE(cname);
+ALTER TABLE st
+ ADD CONSTRAINT st_sno_pk PRIMARY KEY(sno);
 
 
 테이블에 잘못된 데이터가 입력되는 경우
 제약조건 추가가 실패하게 된다.
 
+ALTER TABLE st
+ ADD CONSTRAINT st_cno_fk FOREIGN KEY(cno) REFERENCES class(cno);
 
 
 데이터를 수정하고 다시 위의 명령을 실행하면
 정상적으로 동작한다
 
+UPDATE st SET
+ cno='01'
+ WHERE cno='03';
+
  
+ALTER TABLE st
+ ADD CONSTRAINT st_cno_fk FOREIGN KEY(cno) REFERENCES class(cno);
+
 --NOT NULL 조건 추가
+ALTER TABLE class
+ MODIFY cname CONSTRAINT class_cname_num NOT NULL;
 
 
 제약 조건 삭제
@@ -63,6 +97,21 @@ CASCADE 를 쓰면 class_cno_pk 조건이 삭제되고
 
 만약 CASCADE 를 안쓰면 class_cno_pk 도 삭제가 안된다.
 왜냐하면 자식테이블이 fk조건으로 참조하고 있기 때문에
+
+ALTER TABLE class
+ DROP CONSTRAINT class_cno_pk;
+
+ALTER TABLE class
+ DROP CONSTRAINT class_cno_pk CASCADE;
+
+ALTER TABLE class
+ DROP CONSTRAINT class_cname_nu;
+
+ALTER TABLE class
+ DROP CONSTRAINT class_cname_uk;
+
+ALTER TABLE st
+ DROP CONSTRAINT st_sno_pk;
 
 
 
@@ -80,9 +129,17 @@ DISABLE CONSTRAINT 제약조건명 [CASCADE];
 3) 비활성화된 제약조건은 제약조건을 검사하지 않는다.
 
 부모 class테이블의 pk, 자식 st테이블의 fk 설정 제약조건
+ALTER TABLE class
+ ADD CONSTRAINT class_cno_pk PRIMARY KEY(cno);
 
+ALTER TABLE st
+ ADD CONSTRAINT st_cno_fk FOREIGN KEY(cno) REFERENCES class(cno);
+
+cno='03'인 학생을 먼저 입력하고
+나중에 class에 cno='03'을 입력해야 하는 상황이다.
 
 부모 class에 cno='03'이 없으므로 에러 발생
+INSERT INTO st VALUES('10', '김다은', '03');
 
 
 부모 class 먼저 cno='03'인 행을 삽입
@@ -94,16 +151,21 @@ DISABLE CONSTRAINT 제약조건명 [CASCADE];
 자식부터 입력해야 할수도 있다
 이럴 때 "제약조건의 비활성화"를 사용한다
 
+ALTER TABLE st
+ DISABLE CONSTRAINT st_cno_fk;
+
 
 
 제약조건을 비활성화했으므로 자식 먼저 들어갈 수 있다
-
+INSERT INTO st VALUES('10', '김다은', '03');
 
 나중에 부모데이터를 넣는다
+INSERT INTO class VALUES('03', '분홍열매반');
 
 
 제약조건을 다시 활성화한다
-
+ALTER TABLE st
+ ENABLE CONSTRAINT st_cno_fk;
 
 
 
