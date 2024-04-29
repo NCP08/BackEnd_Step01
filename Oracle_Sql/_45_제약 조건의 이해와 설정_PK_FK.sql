@@ -92,12 +92,50 @@ CREATE TABLE 테이블명(
 
 1) PK와 FK가 추가된 dept와 emp 테이블을 생성한다. 
  -- Windows의 휴지통 비우기 기능과 동일
+ DROP TABLE emp;
+ DROP TABLE dept;
+ PURGE RECYCLEBIN;
   
 --부모 테이블인 dept 테이블부터 생성해야 한다      
-
+CREATE TABLE dept(
+   dno VARCHAR2(2) PRIMARY KEY,
+   dname VARCHAR2(14),
+   loc VARCHAR(8),
+   director VARCHAR2(4)
+);
 
 --PRIMARY KEY 에 대한 제약조건 명칭이 SYS_Cn로 자동 부여된다
+DROP TABLE dept;
 
+CREATE TABLE dept(
+   dno VARCHAR2(2) CONSTRAINT dept_dno_pk PRIMARY KEY,
+   dname VARCHAR2(14),
+   loc VARCHAR(8),
+   director VARCHAR2(4)
+);
+
+DROP TABLE dept;
+
+CREATE TABLE dept(
+   dno VARCHAR2(2),
+   dname VARCHAR2(14),
+   loc VARCHAR(8),
+   director VARCHAR2(4),
+   CONSTRAINT dept_dno_pk PRIMARY KEY(dno)
+);
+
+CREATE TABLE emp(
+   eno VARCHAR2(4),
+   ename VARCHAR2(10),
+   job VARCHAR2(6),
+   MGR VARCHAR2(4),
+   hdate DATE,
+   sal NUMBER,
+   comm NUMBER,
+   dno VARCHAR2(2),
+   CONSTRAINT emp_eno_pk PRIMARY KEY(eno),
+   CONSTRAINT emp_dno_fk FOREIGN KEY(dno) REFERENCES dept(dno)
+);
 
  PK로 정의된 dept의 dno, emp의 eno 컬럼은 
 중복된 값 X, NULL X
@@ -106,15 +144,29 @@ CREATE TABLE 테이블명(
 데이터를 입력하면 에러가 발생한다.
 
 dept와 emp에 데이터를 입력하고 제약조건 설정을 테스트
+INSERT INTO dept(dno, dname, loc)
+ VALUES('10', '개발', '서울');
 
+SELECT * FROM dept;
+
+INSERT INTO emp(eno, ename, dno)
+ VALUES('2000', '김연아', '10');
+
+
+SELECT * FROM emp;
 
 PK에 이미 '10'번 부서가 있으므로 중복데이터 입력 방지
 PK에 대한 무결성을 '개체 무결성'이라 한다
+INSERT INTO dept(dno, dname, loc)
+ VALUES('10', '총무', '부산');
 
+INSERT INTO dept(dname, loc)
+ VALUES('총무', '부산');
 
 FK값이 부모테이블에 존재하지 않으므로 입력 방지
 FK에 대한 무결성을 '참조 무결성'이라 한다
-
+INSERT INTO emp(eno, ename, dno)
+ VALUES('2001', '손연재', '20');
 
 
 데이터 모델링해서 물리 데이터베이스 테이블 생성방법

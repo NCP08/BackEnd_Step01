@@ -51,23 +51,40 @@ CREATE TABLE 테이블명(
     
 emp4 테이블을 생성한다
 
+CREATE TABLE emp4(
+  eno VARCHAR2(4),
+  ename VARCHAR2(50) CONSTRAINT emp4_ename_nu NOT NULL,
+  gno VARCHAR2(13),
+  sex VARCHAR2(3),
+  CONSTRAINT emp4_eno_pk PRIMARY KEY(eno),
+  CONSTRAINT emp4_gno_uk UNIQUE(gno),
+  CONSTRAINT emp4_gno_ch CHECK(LENGTH(gno)=13),
+  CONSTRAINT emp4_sex_ch CHECK(sex IN('여', '남'))
+);
 
 
 
 정상 조건을 만족할 때 잘 입력됨
+INSERT INTO emp4(eno, ename, gno, sex)
+ VALUES('1001', '김연아', '1234567890123', '여');
 
+SELECT * FROM emp4;
  
 ename에 NULL이 입력될 경우
-
+INSERT INTO emp4(eno, ename, gno, sex)
+ VALUES('1002', NULL, '1234567890124', '여');
 
 gno(주민번호) 중복시
-
+INSERT INTO emp4(eno, ename, gno, sex)
+ VALUES('1003', '임연아', '1234567890123', '여');
  
 gno(주민번호) 글자가 12글자일때
-
+INSERT INTO emp4(eno, ename, gno, sex)
+ VALUES('1004', '이연아', '123456789012', '여');
  
 '여'/'남' 대신 'M'을 넣을 때
-
+INSERT INTO emp4(eno, ename, gno, sex)
+ VALUES('1005', '최연아', '1234567890127', 'M');
 
 
 
