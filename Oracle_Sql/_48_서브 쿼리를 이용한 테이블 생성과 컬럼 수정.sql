@@ -31,14 +31,32 @@ DROP COLUMN 컬럼;
 
 테이블 생성
 
+CREATE TABLE test(
+  no Number
+);
+
 테이블 컬럼 추가
+
+ALTER TABLE test
+ ADD name CHAR(10);
+
+DESC test;
 
 
 테이블 컬럼 수정
 
+ALTER TABLE test
+ MODIFY name VARCHAR2(10);
+
+DESC test;
 
 테이블 컬럼 삭제
 
+ALTER TABLE test
+ DROP COLUMN name;
+
+
+DESC test;
 
 <서브 쿼리를 이용한 테이블 생성>
 CREATE TABLE 테이블명 (컬럼, ...)
@@ -56,14 +74,38 @@ AS (SELECT 문 : sub query 문);
 개발업무를 담당하는 사원의 근무 부서관련 정보를
 검색할 수 있는 테이블을 생성한다.
 
+DROP TABLE e_dept;
+
+CREATE TABLE e_dept
+ AS (SELECT eno, ename, job, dno, dname, loc
+      FROM emp
+      JOIN dept USING(dno)
+      WHERE job='개발');
+
+DESC e_dept;
+
+SELECT * FROM e_dept;
+
 
     
 부서별 평균 연봉을 검색할 수 있는 테이블을 생성하라
 
+CREATE TABLE d_sal
+ AS (SELECT dno, dname, ROUND(AVG(sal*12+NVL(comm,0))) avg_sal
+      FROM dept
+      JOIN emp USING(dno) 
+      GROUP BY dno, dname);
 
+DESC d_sal;
+
+SELECT * FROM d_sal;
     
     
 --부서별로 검색된 사원의 연봉 정보를 이용하여 테이블을 생성
+CREATE TABLE e_sal(dno, eno, ename, an_sal)
+ AS (SELECT dno, eno, ename, sal*12+NVL(comm,0)
+      FROM emp
+      ORDER BY dno);
 
      
 RDB에서는 테이블은 컬럼의 순서나 행의 순서와는 무관하다는
@@ -81,10 +123,29 @@ I/O 양을 줄일 수 있고, 나중에 정렬할 필요가 없어서 성능을
 이럴 때는 아래처럼 2단계로 나눠서 작업을 한다.
 1) 먼저 빈 테이블을 생성한다
 
+-- 의도적으로 존재할 수 없는 조건을 만들어서 서브쿼리를 구성했다.
+-- WHERE 1=2
+
+CREATE TABLE e_sal(dno, eno, ename, an_sal)
+ AS (SELECT dno, eno, ename, sal*12+NVL(comm, 0)
+      FROM emp
+      WHERE 1=2);
+
+DESC e_sal;
+
+SELECT * FROM e_sal;
+
 
 2) 빈 테이블에 정렬된 결과를 입력한다
  (대용량 데이터 입력시 '다이렉트 로드'를 이용하면
  속도가 훨씬 빨라진다)
+
+INSERT INTO e_sal
+ SELECT dno, eno, ename, sal*12+NVL(comm, 0)
+  FROM emp
+  ORDER BY dno;
+
+SELECT * FROM e_sal;
 
 
 
