@@ -93,6 +93,9 @@ DROP INDEX 인덱스명;
 student 테이블에 인덱스를 추가/삭제한다
 일반 컬럼 인덱스 생성
 
+CREATE INDEX student_sname_idx
+ ON student(sname);
+
 
 
 복합 인덱스 생성
@@ -103,24 +106,55 @@ major, sname 컬럼으로 조건검색하는 경우 비약적인 속도
 향상을 가져온다.
 단, sname 만으로 조건 검색하는 경우는 사용되지 못한다.
 
+CREATE INDEX student_major_sname_idx
+ ON student(major, sname);
+
 
   
 함수 기반 인덱스 생성
 
+CREATE INDEX student_coavr_idx
+ ON student(avr/4.0*4.5);
+
 
 student 인덱스를 삭제한다
+
+DROP INDEX student_major_sname_idx;
 
 
 PK의 인덱스는 삭제할 수 없다
 
-PK의 제약조건을 비활성화시 인덱스가 삭제된다
+DROP INDEX student_sno_pk;
 
+PK의 제약조건을 비활성화시 인덱스가 삭제된다
+ALTER TABLE student
+ DISABLE CONSTRAINT student_sno_pk;
+
+ALTER TABLE score
+ DISABLE CONSTRAINT score_sno_fk;
+
+ALTER TABLE student
+ DISABLE CONSTRAINT student_sno_pk;
 
 PK의 제약조건을 활성화시 인덱스가 생성된다.
+ALTER TABLE student
+ ENABLE CONSTRAINT student_sno_pk;
 
+
+ALTER TABLE score
+ ENABLE CONSTRAINT score_sno_fk;
 
 score, course 테이블에 FK를 확인하고
 FK 컬럼에 인덱스를 생성한다.
+
+CREATE INDEX score_cno_fk
+ ON score(cno);
+
+CREATE INDEX score_sno_fk
+ ON score(sno);
+
+CREATE INDEX course_pno_fk
+ ON course(pno);
 
 
 
