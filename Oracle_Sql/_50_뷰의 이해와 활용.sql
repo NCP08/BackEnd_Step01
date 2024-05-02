@@ -50,6 +50,47 @@ AS (SELECT 문 : sub query 문);
 
 각 일반화학 과목의 학과별 기말고사 평균을 검색하고 뷰로 생성한다.
 
+SELECT cno, cname, major, ROUND(AVG(result), 2)
+ FROM student 
+ JOIN score USING(sno)
+ JOIN course USING(cno)
+ WHERE cname='일반화학'
+ GROUP BY cno, cname, major;
+
+  -- 서브쿼리를 이용한 테이블 생성
+  -- 물리적 공간(tablespace의 table segment영역에 테이블 생성)
+  -- 단점 : 해당 시점에 감사등에 주로 사용되지만
+  --        시간이 지났을 때 root테이블과 new테이블의
+  --        데이터의 불일치가 벌어지므로
+  --        일정 시점에서만 사용하도록 관리되어야 한다.
+
+CREATE TABLE major_avg
+ AS (SELECT cno, cname, major, ROUND(AVG(result), 2) mavg
+      FROM student 
+      JOIN score USING(sno)
+      JOIN course USING(cno)
+      WHERE cname='일반화학'
+      GROUP BY cno, cname, major);
+
+SELECT * FROM major_avg;
+
+-- View는 가상 테이블이므로 물리적인 리소스가 아니다.
+-- 개념으로 존재하는 것이다.
+-- 항상 root테이블의 데이터를 가져오므로 update가 필요없다.
+
+-- View는 기존 테이블과 연결만 해놓은 것이다.
+
+CREATE VIEW ma_result(과목번호, 과목명, 학과, 기말고사평균)
+AS (SELECT cno, cname, major, ROUND(AVG(result), 2) mavg
+      FROM student 
+      JOIN score USING(sno)
+      JOIN course USING(cno)
+      WHERE cname='일반화학'
+      GROUP BY cno, cname, major);
+
+-- App입장에서는 ma_result가 그냥 테이블인줄 안다
+SELECT * FROM ma_result;
+
   
 서브 쿼리를 이용한 테이블은 물리적인 테이블을 만들어서
 새로 데이터를 추출/입력하므로
@@ -74,14 +115,53 @@ View를 검색할 때 View 에 정의된 기반 테이블을 검색해서
 
 WITH CHECK OPTION 을 이용해서 뷰를 생성한다
 
+CREATE VIEW st_ch
+ AS (SELECT sno, sname, syear, avr
+      FROM student
+      WHERE syear=1);
+
+SELECT * FROM st_ch;
+
+-- 삽입은 된다.
+INSERT INTO st_ch
+ VALUES('0000001', '연아', 2, 4.0);
+
+-- 하지만 st_ch 뷰를 통해 보이진 않는다.
+SELECT * FROM st_ch WHERE sname='연아';
+
+SELECT * FROM student WHERE sname='연아';
+
+ROLLBACK;
 
 
 뷰를 통해 student 테이블에 저장된다.
 하지만 뷰는 1학년만 보여주게 되어 있다.
 
+-- 해당 뷰가 없으면 생성하고, 있으면 갱신한다.
+CREATE OR REPLACE VIEW st_ch
+ AS SELECT sno, sname, syear, avr
+      FROM student
+      WHERE syear=1
+ WITH CHECK OPTION CONSTRAINT view_st_ch_ck;
+
+CREATE OR REPLACE VIEW st_ch
+ AS (SELECT sno, sname, syear, avr
+      FROM student
+      WHERE syear=1)
+ WITH CHECK OPTION CONSTRAINT view_st_ch_ck;
+
 
 이제는 1학년만 삽입할 수 있다.
 
+-- 1학년이 아닌 값은 삽입할 수 없다.
+INSERT INTO st_ch
+ VALUES('0000001', '연아', 2, 4.0);
+
+-- 1학년은 삽입이 잘 된다.
+INSERT INTO st_ch
+ VALUES('0000002', '현아', 1, 4.5);
+
+SELECT * FROM st_ch WHERE sname='현아';
 
     
     
