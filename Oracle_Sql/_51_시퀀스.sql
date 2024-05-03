@@ -70,8 +70,17 @@
      
 시퀀스를 2가지 방법으로 생성해보자
 
+CREATE SEQUENCE emp_eno_seq
+ START WITH 1
+ INCREMENT BY 1
+ NOMAXVALUE
+ NOMINVALUE
+ NOCYCLE
+ CACHE 20;
 
 디폴트 설정(1씩 증가)
+
+CREATE SEQUENCE dept_dno_seq;
 
 
 
@@ -80,14 +89,37 @@ CACHE 자동으로 20개 만들어놓는 것
 보다 MAXVALUE 가 커야한다
 그래서 아래는 에러
 
+CREATE SEQUENCE co_cno_seq
+ MAXVALUE 5
+ CYCLE;
+
+
+CREATE SEQUENCE co_cno_seq
+ MAXVALUE 50
+ CYCLE;
+
 
 
   
 시퀀스로부터 값을 할당받아 사용한다
 
+INSERT INTO emp(eno)
+ VALUES(emp_eno_seq.nextval);
+
+SELECT * FROM emp;
+
+ROLLBACK;
+
+SELECT * FROM emp;
+
+INSERT INTO emp(eno)
+ VALUES(emp_eno_seq.nextval);
+
+SELECT * FROM emp;
 
 현재 시퀀스로 사용된 최대값을 얻어오기
-
+SELECT emp_eno_seq.currval
+ FROM dual;
 
 롤백을 해도 시퀀스는 그냥 증가한다
 중복되지 않은 값을 쓸때는 유용하지만
