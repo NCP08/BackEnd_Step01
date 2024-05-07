@@ -20,6 +20,14 @@ SELECT ...
 앞의 컬럼을 기준으로 출력된다
 ALTER SESSION SET nls_date_format='YYYY/MM/DD';
 
+SELECT eno 사원_교수번호, ename 이름, hdate 입사일
+ FROM emp
+ WHERE hdate > TO_DATE('2000/01/01', 'YYYY/MM/DD')
+UNION ALL
+SELECT pno, pname, hiredate
+ FROM professor
+ WHERE hiredate > TO_DATE('2000/01/01', 'YYYY/MM/DD');
+
 
 
 
@@ -31,7 +39,13 @@ UNION ALL 은 그냥 검색
 
 제갈씨를 가진 사원 중에 지원 업무를 하지 않는 사원을 검색
 
-
+SELECT eno, ename, job
+ FROM emp
+ WHERE ename LIKE '제갈%'
+MINUS
+SELECT eno, ename, job
+ FROM emp
+ WHERE job='지원';
 
 
  

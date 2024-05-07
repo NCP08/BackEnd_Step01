@@ -15,6 +15,19 @@ FROM (SELECT 문 : sub query 문) 별명
  
 각 부서별 최소 급여자를 검색한다
 
+-- 부서별 최소 급여를 검색
+SELECT dno, MIN(sal) msal
+ FROM emp
+ GROUP BY dno;
+
+SELECT eno, ename, d.dno, sal, msal
+ FROM emp e, (SELECT dno, MIN(sal) msal
+              FROM emp
+              GROUP BY dno) d
+ WHERE e.dno=d.dno
+ AND sal=msal;
+
+
  
 
 
